@@ -176,3 +176,4 @@ cython_debug/
 
 # Additional add
 .conda
+settings.json
