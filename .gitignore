@@ -177,3 +177,16 @@ cython_debug/
 # Additional add
 .conda
 settings.json
+
+# all .DS_Store
+**/.DS_Store
+.DS_Store
+
+# Airflow related
+logs/
+airflow.db
+airflow.cfg
+unittests.cfg
+webserver_config.py
+standalone_admin_password.txt
+webserver_config.py
