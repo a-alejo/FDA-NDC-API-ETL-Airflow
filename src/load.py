@@ -1,14 +1,18 @@
 import json
 import psycopg2
-from config import db_user, db_password
 
 
-def load_data():
+def load_data(**context):
+    all_results = context["ti"].xcom_pull(task_ids="extract_data")
+    if not all_results:
+        print("No data retrieved from extract task")
+        return
+
     conn = psycopg2.connect(
-        host="localhost",
-        database="Postgres 16 - Localhost - FDA-NDC-ETL_db",
-        user=db_user,
-        password=db_password,
+        host="postgres",
+        database="airflow",
+        user="airflow",
+        password='airflow',
     )
 
     cursor = conn.cursor()
@@ -89,5 +93,5 @@ def load_data():
 
         # Commit the transaction
         conn.commit()
-        conn.close()
+    conn.close()
     print("Data inserted successfully")

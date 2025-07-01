@@ -1,12 +1,12 @@
-from config import db_user, db_password
+import psycopg2
 
 
-def transform_data():
+def transform_data(**context):
     conn = psycopg2.connect(
-        host="localhost",
-        database="Postgres 16 - Localhost - FDA-NDC-ETL_db",
-        user=db_user,
-        password=db_password,
+        host="postgres",
+        database="airflow",
+        user="airflow",
+        password="airflow",
     )
 
     cursor = conn.cursor()

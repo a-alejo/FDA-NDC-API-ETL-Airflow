@@ -1,11 +1,9 @@
 import requests
-import json
 import time
-import os
 from config import api_key
 
 
-def extract_data():
+def extract_data(**context):
     limit = 1000  # I got this number by testing on Postman
     all_results = []
     response = requests.get("https://api.fda.gov/drug/ndc.json")
@@ -35,6 +33,7 @@ def extract_data():
             if "results" in data:
                 all_results.extend(data["results"])
 
+
         else:
             print(
                 f"failed to get data starting at {x} with a status code of {site_map.status_code}"
@@ -47,3 +46,6 @@ def extract_data():
 
     # print out the count
     print(f"Final total results: {len(all_results)}")
+
+    # Push results to XCom
+    context["ti"].xcom_push(key="extracted_data", value=all_results)

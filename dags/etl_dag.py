@@ -1,9 +1,14 @@
+import sys
+sys.path.insert(0, "/opt/airflow")
+sys.path.insert(0, "/opt/airflow/src")
+from extract import extract_data
+from load import load_data
+from transform import transform_data
+from config import api_key
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
-from src.extract import extract_data
-from src.load import load_data
-from src.transform import transform_data
+
 
 dag = DAG(
     dag_id="etl_pipeline",
@@ -11,7 +16,7 @@ dag = DAG(
     start_date=datetime(2025, 2, 15),
     schedule="@daily",
     default_args={
-        "owner": "Alfredo_Test",
+        "owner": "airflow",
         "retries": 1,
         "retry_delay": timedelta(minutes=5),
     },
