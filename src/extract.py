@@ -18,12 +18,18 @@ def extract_data(**context):
 
     else:
         print("Failed to fetch data", response.status_code)
+        
+    #  Limit the number of records to fetch to set maximum
+    max_total = 10000
+    max_records = min(total_results, max_total)
 
-    # loop through all the data and add to it the 'all_results' open list
-    for x in range(0, total_results, limit):
-        if x >= total_results:
-            break  # this is to prevent the issue of skipping past the results
+    # # loop through all the data and add to it the 'all_results' open list
+    # for x in range(0, total_results, limit):
+    #     if x >= total_results:
+    #         break  # this is to prevent the issue of skipping past the results
 
+    # Loop through the "maximum" amount
+    for x in range(0, max_records, limit):
         site_map = requests.get(
             f"https://api.fda.gov/drug/ndc.json?api_key={api_key}&limit={limit}&skip={x}"
         )
