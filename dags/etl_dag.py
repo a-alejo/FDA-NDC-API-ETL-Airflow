@@ -21,6 +21,7 @@ dag = DAG(
         "retry_delay": timedelta(minutes=5),
     },
     catchup=False,
+    tags=['ETL','FDA','Postgres']
 )
 
 # Task 1: Extract data
