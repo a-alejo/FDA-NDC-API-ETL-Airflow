@@ -12,7 +12,7 @@ def load_data(**context):
         host="postgres",
         database="airflow",
         user="airflow",
-        password='airflow',
+        password="airflow",
     )
 
     cursor = conn.cursor()

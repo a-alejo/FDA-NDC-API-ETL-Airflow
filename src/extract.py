@@ -18,7 +18,7 @@ def extract_data(**context):
 
     else:
         print("Failed to fetch data", response.status_code)
-        
+
     #  Limit the number of records to fetch to set maximum
     max_total = 10000
     max_records = min(total_results, max_total)
@@ -38,7 +38,6 @@ def extract_data(**context):
             data = site_map.json()
             if "results" in data:
                 all_results.extend(data["results"])
-
 
         else:
             print(

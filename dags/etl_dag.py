@@ -1,14 +1,16 @@
 import sys
+
 sys.path.insert(0, "/opt/airflow")
 sys.path.insert(0, "/opt/airflow/src")
+
 from extract import extract_data
 from load import load_data
 from transform import transform_data
+
 from config import api_key
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
-
 
 dag = DAG(
     dag_id="etl_pipeline",
@@ -21,7 +23,7 @@ dag = DAG(
         "retry_delay": timedelta(minutes=5),
     },
     catchup=False,
-    tags=['ETL','FDA','Postgres']
+    tags=["ETL", "FDA", "Postgres"],
 )
 
 # Task 1: Extract data
