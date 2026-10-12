@@ -1,9 +1,16 @@
-import requests
+import json
+import os
 import time
+from tempfile import NamedTemporaryFile
+from pathlib import Path
+
+import requests
 from config import api_key
 
+STAGING_DIR = Path(os.environ["AIRFLOW_HOME"]) / "data"
 
-def extract_data(**context):
+
+def extract_data():
     limit = 1000  # I got this number by testing on Postman
     all_results = []
     response = requests.get("https://api.fda.gov/drug/ndc.json")
@@ -52,5 +59,16 @@ def extract_data(**context):
     # print out the count
     print(f"Final total results: {len(all_results)}")
 
-    # Push results to XCom
-    context["ti"].xcom_push(key="extracted_data", value=all_results)
+    STAGING_DIR.mkdir(parents=True, exist_ok=True)
+    with NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        dir=STAGING_DIR,
+        prefix="ndc_",
+        suffix=".json",
+        delete=False,
+    ) as staging_file:
+        json.dump(all_results, staging_file)
+
+    print(f"Staged extracted data at {staging_file.name}")
+    return staging_file.name

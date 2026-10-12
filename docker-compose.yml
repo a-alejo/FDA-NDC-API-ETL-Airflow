@@ -1,4 +1,3 @@
-version: '3'
 services:
   postgres:
     image: postgres:13
@@ -30,6 +29,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./src:/opt/airflow/src
+      - ./data:/opt/airflow/data
       - ./logs:/opt/airflow/logs
       - ./config.py:/opt/airflow/config.py
     ports:

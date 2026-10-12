@@ -1,11 +1,22 @@
 import json
+from pathlib import Path
+
 import psycopg2
 
-
 def load_data(**context):
-    all_results = context["ti"].xcom_pull(task_ids="extract_data")
+    staging_file = context["ti"].xcom_pull(task_ids="extract_data")
+    if not staging_file:
+        print("No staged data path received from extract task")
+        return
+
+    staging_path = Path(staging_file)
+    if not staging_path.exists():
+        print(f"No staged data found at {staging_path}")
+        return
+
+    all_results = json.loads(staging_path.read_text(encoding="utf-8"))
     if not all_results:
-        print("No data retrieved from extract task")
+        print("Staged extract data is empty")
         return
 
     conn = psycopg2.connect(
@@ -94,4 +105,5 @@ def load_data(**context):
         # Commit the transaction
         conn.commit()
     conn.close()
+    staging_path.unlink()
     print("Data inserted successfully")
