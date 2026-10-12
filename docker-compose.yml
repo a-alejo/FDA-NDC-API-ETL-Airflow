@@ -12,15 +12,19 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   airflow-webserver:
-    image: apache/airflow:2.8.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fda-ndc-airflow:3.3.2
     restart: always
     depends_on:
       - postgres
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__CORE__FERNET_KEY: ''
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: 'admin:admin'
     env_file:
       - .env
     volumes:
@@ -30,13 +34,7 @@ services:
       - ./config.py:/opt/airflow/config.py
     ports:
       - "8080:8080"
-    command: >
-      bash -c "
-      airflow db upgrade &&
-      airflow users create --username admin --firstname admin --lastname admin --role Admin --password admin --email admin@example.com &&
-      airflow scheduler &
-      airflow webserver
-      "
+    command: standalone
 
 volumes:
   postgres_data:
