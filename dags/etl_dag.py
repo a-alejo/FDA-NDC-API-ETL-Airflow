@@ -8,8 +8,8 @@ from load import load_data
 from transform import transform_data
 
 from config import api_key
-from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
+from airflow.sdk import DAG
 from datetime import datetime, timedelta
 
 dag = DAG(
